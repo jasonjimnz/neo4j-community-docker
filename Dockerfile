@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 MAINTAINER Jason Jimenez Cruz
 
 # Installing base software
-RUN apt-get update && apt-get install git wget nano apache2 -y
+RUN apt-get update && apt-get install git wget nano apache2 openjdk-8-jre -y
 
 # Downloading Neo4J 
 RUN wget https://neo4j.com/artifact.php?name=neo4j-community-3.5.0-unix.tar.gz && tar -xf artifact.php?name=neo4j-community-3.5.0-unix.tar.gz
@@ -17,11 +17,10 @@ RUN cd /neo4j-community-3.5.0/plugins && wget https://github.com/neo4j-contrib/n
 # Adding config lines for exposing neo4j ports outside the server and for enabling the plugins after starting NEO4J
 RUN echo "dbms.connector.bolt.listen_address=0.0.0.0:7687" >> /neo4j-community-3.5.0/conf/neo4j.conf \
  && echo "dbms.connector.http.listen_address=0.0.0.0:7474" >> /neo4j-community-3.5.0/conf/neo4j.conf \
- && echo "dbms.security.procedures.whitelist=apoc.coll.*,apoc.load.*" >> /neo4j-community-3.5.0/conf/neo4j.conf 
+ && echo "dbms.security.procedures.whitelist=apoc.*" >> /neo4j-community-3.5.0/conf/neo4j.conf 
 
 # Changing the volume permissions for persistent storage of the database
 RUN mkdir -p /neo4j-community-3.5.0/data/databases/graph.db && \
-    chown neo4j:adm /neo4j-community-3.5.0/data/databases/graph.db && \
     chmod -R 777 /neo4j-community-3.5.0/data/databases
 
 # Download scripts from repo
